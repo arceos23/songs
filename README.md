@@ -10,7 +10,7 @@
 ## API
 
 1. Explore security considerations such as setting appropriate security headers
-2. Consider using fuzzy matching to identify the title of a song that a user wants to update.
+2. Consider using fuzzy matching to identify the title of a song that a user wants to update
 
 ## CI/CD
 
