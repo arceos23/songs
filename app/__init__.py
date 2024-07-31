@@ -1,24 +1,26 @@
+import json
 from flask import Flask, request, Response
 from http import HTTPStatus
 import constants
+
 
 def create_app(test_config=None):
     """Return a songs API app."""
     app = Flask(__name__, instance_relative_config=True)
 
     from . import db
-
+    db.init_app(app)
 
     @app.get(f"{constants.API_VERSION_ONE}/songs")
     def songs():
-        """Return a paginated response of songs."""
+        """Return a paginated response of songs based on query parameters."""
         title = request.args.get('title', None)
         if title is not None:
-            song = db.get_song(title)
-            if len(song) == 0:
+            songs = db.get_song(title)
+            if len(songs) == 0:
                 return Response(constants.SONG_TITLE_NOT_FOUND_MESSAGE + title, HTTPStatus.NOT_FOUND)
             else:
-                return Response(song.to_json(orient='records'), HTTPStatus.OK, mimetype=constants.JSON_MIMETYPE)
+                return Response(json.dumps([dict(song) for song in songs]), HTTPStatus.OK, mimetype=constants.JSON_MIMETYPE)
         else:
             try:
                 start = int(request.args.get('start', constants.PAGINATION_START_DEFAULT))
@@ -30,7 +32,7 @@ def create_app(test_config=None):
                 return Response(constants.INVALID_LIMIT_DATA_TYPE_MESSAGE, HTTPStatus.BAD_REQUEST)
 
             songs = db.get_songs(start, limit)
-            return Response(songs.to_json(orient="records"), HTTPStatus.OK, mimetype=constants.JSON_MIMETYPE)
+            return Response(json.dumps([dict(song) for song in songs]), HTTPStatus.OK, mimetype=constants.JSON_MIMETYPE)
 
 
     @app.patch(f"{constants.API_VERSION_ONE}/songs/<id>")
@@ -45,10 +47,10 @@ def create_app(test_config=None):
         if not (rating >= constants.RATING_LOWER_BOUND and rating <= constants.RATING_UPPER_BOUND):
             return Response(constants.INVALID_RATING_RANGE_MESSAGE, HTTPStatus.BAD_REQUEST)
 
-        song = db.set_song_rating(id, rating)
-        if len(song) == 0:
+        songs = db.set_song_rating(id, rating)
+        if len(songs) == 0:
              return Response(constants.SONG_ID_NOT_FOUND_MESSAGE + id, HTTPStatus.NOT_FOUND)
         else:
-            return Response(song.to_json(orient='records'), HTTPStatus.OK, mimetype=constants.JSON_MIMETYPE)
+            return Response(json.dumps([dict(song) for song in songs]), HTTPStatus.OK, mimetype=constants.JSON_MIMETYPE)
 
     return app

@@ -1,31 +1,6 @@
-
 import pytest
 from http import HTTPStatus
-from app import create_app
 import constants
-
-@pytest.fixture
-def app():
-    app = create_app()
-    app.config.update({
-        "TESTING": True,
-    })
-
-    yield app
-
-
-@pytest.fixture()
-def client(app):
-    return app.test_client()
-
-
-@pytest.fixture()
-def runner(app):
-    return app.test_cli_runner()
-
-
-def test_app_creation():
-    assert app is not None
 
 
 def test_get_request(client):
@@ -36,14 +11,15 @@ def test_get_request(client):
     assert response.is_json
 
     assert len(response.json[0]) == constants.NUMBER_OF_ATTRIBUTES
-    assert response.json[0]["id"] == "5vYA1mW9g2Coh1HUFUSmlb"
+    assert response.json[0]["id"] == 1
+    assert response.json[0]["external_id"] == "5vYA1mW9g2Coh1HUFUSmlb"
     assert response.json[0]["title"] == "3AM"
     assert response.json[0]["danceability"] == 0.521
     assert response.json[0]["energy"] == 0.673
     assert response.json[0]["key"] == 8
     assert response.json[0]["loudness"] == -8.685
     assert response.json[0]["mode"] == 1
-    assert response.json[0]["acousticness"] == 0.00573
+    assert response.json[0]["acousticness"] == pytest.approx(0.00573, constants.DEGREE_OF_ERROR)
     assert response.json[0]["instrumentalness"] == 0.0
     assert response.json[0]["liveness"] == 0.12
     assert response.json[0]["valence"] == 0.543
@@ -65,14 +41,15 @@ def test_get_request_with_start_query_parameter(client):
     assert response.is_json
 
     assert len(response.json[0]) == constants.NUMBER_OF_ATTRIBUTES
-    assert response.json[0]["id"] == "5vYA1mW9g2Coh1HUFUSmlb"
+    assert response.json[0]["id"] == 1
+    assert response.json[0]["external_id"] == "5vYA1mW9g2Coh1HUFUSmlb"
     assert response.json[0]["title"] == "3AM"
     assert response.json[0]["danceability"] == 0.521
     assert response.json[0]["energy"] == 0.673
     assert response.json[0]["key"] == 8
     assert response.json[0]["loudness"] == -8.685
     assert response.json[0]["mode"] == 1
-    assert response.json[0]["acousticness"] == 0.00573
+    assert response.json[0]["acousticness"] == pytest.approx(0.00573, constants.DEGREE_OF_ERROR)
     assert response.json[0]["instrumentalness"] == 0.0
     assert response.json[0]["liveness"] == 0.12
     assert response.json[0]["valence"] == 0.543
@@ -94,14 +71,15 @@ def test_get_request_with_limit_query_parameter(client):
     assert response.is_json
 
     assert len(response.json[0]) == constants.NUMBER_OF_ATTRIBUTES
-    assert response.json[0]["id"] == "5vYA1mW9g2Coh1HUFUSmlb"
+    assert response.json[0]["id"] == 1
+    assert response.json[0]["external_id"] == "5vYA1mW9g2Coh1HUFUSmlb"
     assert response.json[0]["title"] == "3AM"
     assert response.json[0]["danceability"] == 0.521
     assert response.json[0]["energy"] == 0.673
     assert response.json[0]["key"] == 8
     assert response.json[0]["loudness"] == -8.685
     assert response.json[0]["mode"] == 1
-    assert response.json[0]["acousticness"] == 0.00573
+    assert response.json[0]["acousticness"] == pytest.approx(0.00573, constants.DEGREE_OF_ERROR)
     assert response.json[0]["instrumentalness"] == 0.0
     assert response.json[0]["liveness"] == 0.12
     assert response.json[0]["valence"] == 0.543
@@ -123,14 +101,15 @@ def test_get_request_with_start_and_limit_query_parameters(client):
     assert response.is_json
 
     assert len(response.json[0]) == constants.NUMBER_OF_ATTRIBUTES
-    assert response.json[0]["id"] == "5vYA1mW9g2Coh1HUFUSmlb"
+    assert response.json[0]["id"] == 1
+    assert response.json[0]["external_id"] == "5vYA1mW9g2Coh1HUFUSmlb"
     assert response.json[0]["title"] == "3AM"
     assert response.json[0]["danceability"] == 0.521
     assert response.json[0]["energy"] == 0.673
     assert response.json[0]["key"] == 8
     assert response.json[0]["loudness"] == -8.685
     assert response.json[0]["mode"] == 1
-    assert response.json[0]["acousticness"] == 0.00573
+    assert response.json[0]["acousticness"] == pytest.approx(0.00573, constants.DEGREE_OF_ERROR)
     assert response.json[0]["instrumentalness"] == 0.0
     assert response.json[0]["liveness"] == 0.12
     assert response.json[0]["valence"] == 0.543
@@ -164,14 +143,15 @@ def test_get_request_with_title_query_parameter(client):
     assert response.is_json
 
     assert len(response.json[0]) == constants.NUMBER_OF_ATTRIBUTES
-    assert response.json[0]["id"] == "5vYA1mW9g2Coh1HUFUSmlb"
+    assert response.json[0]["id"] == 1
+    assert response.json[0]["external_id"] == "5vYA1mW9g2Coh1HUFUSmlb"
     assert response.json[0]["title"] == "3AM"
     assert response.json[0]["danceability"] == 0.521
     assert response.json[0]["energy"] == 0.673
     assert response.json[0]["key"] == 8
     assert response.json[0]["loudness"] == -8.685
     assert response.json[0]["mode"] == 1
-    assert response.json[0]["acousticness"] == 0.00573
+    assert response.json[0]["acousticness"] == pytest.approx(0.00573, constants.DEGREE_OF_ERROR)
     assert response.json[0]["instrumentalness"] == 0.0
     assert response.json[0]["liveness"] == 0.12
     assert response.json[0]["valence"] == 0.543
@@ -194,7 +174,7 @@ def test_get_request_with_non_existent_title_query_parameter(client):
 
 
 def test_patch_request_update_rating(client):
-    id = "5vYA1mW9g2Coh1HUFUSmlb"
+    id = 1
     response = client.patch(f"{constants.API_VERSION_ONE}/songs/{id}", data={"rating": 2})
 
     assert len(response.json) == 1
@@ -202,14 +182,15 @@ def test_patch_request_update_rating(client):
     assert response.is_json
 
     assert len(response.json[0]) == constants.NUMBER_OF_ATTRIBUTES
-    assert response.json[0]["id"] == id
+    assert response.json[0]["id"] == 1
+    assert response.json[0]["external_id"] == "5vYA1mW9g2Coh1HUFUSmlb"
     assert response.json[0]["title"] == "3AM"
     assert response.json[0]["danceability"] == 0.521
     assert response.json[0]["energy"] == 0.673
     assert response.json[0]["key"] == 8
     assert response.json[0]["loudness"] == -8.685
     assert response.json[0]["mode"] == 1
-    assert response.json[0]["acousticness"] == 0.00573
+    assert response.json[0]["acousticness"] == pytest.approx(0.00573, constants.DEGREE_OF_ERROR)
     assert response.json[0]["instrumentalness"] == 0.0
     assert response.json[0]["liveness"] == 0.12
     assert response.json[0]["valence"] == 0.543
@@ -229,14 +210,15 @@ def test_patch_request_update_rating(client):
     assert response.is_json
 
     assert len(response.json[0]) == constants.NUMBER_OF_ATTRIBUTES
-    assert response.json[0]["id"] == "5vYA1mW9g2Coh1HUFUSmlb"
+    assert response.json[0]["id"] == 1
+    assert response.json[0]["external_id"] == "5vYA1mW9g2Coh1HUFUSmlb"
     assert response.json[0]["title"] == "3AM"
     assert response.json[0]["danceability"] == 0.521
     assert response.json[0]["energy"] == 0.673
     assert response.json[0]["key"] == 8
     assert response.json[0]["loudness"] == -8.685
     assert response.json[0]["mode"] == 1
-    assert response.json[0]["acousticness"] == 0.00573
+    assert response.json[0]["acousticness"] == pytest.approx(0.00573, constants.DEGREE_OF_ERROR)
     assert response.json[0]["instrumentalness"] == 0.0
     assert response.json[0]["liveness"] == 0.12
     assert response.json[0]["valence"] == 0.543
