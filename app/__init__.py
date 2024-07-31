@@ -15,7 +15,10 @@ def create_app(test_config=None):
         title = request.args.get('title', None)
         if title is not None:
             song = db.get_song(title)
-            return Response(song.to_json(orient='records'), HTTPStatus.OK, mimetype=constants.JSON_MIMETYPE)
+            if len(song) == 0:
+                return Response(constants.SONG_TITLE_NOT_FOUND_MESSAGE + title, HTTPStatus.NOT_FOUND)
+            else:
+                return Response(song.to_json(orient='records'), HTTPStatus.OK, mimetype=constants.JSON_MIMETYPE)
         else:
             try:
                 start = int(request.args.get('start', constants.PAGINATION_START_DEFAULT))
@@ -43,6 +46,9 @@ def create_app(test_config=None):
             return Response(constants.INVALID_RATING_RANGE_MESSAGE, HTTPStatus.BAD_REQUEST)
 
         song = db.set_song_rating(id, rating)
-        return Response(song.to_json(orient='records'), HTTPStatus.OK, mimetype=constants.JSON_MIMETYPE)
+        if len(song) == 0:
+             return Response(constants.SONG_ID_NOT_FOUND_MESSAGE + id, HTTPStatus.NOT_FOUND)
+        else:
+            return Response(song.to_json(orient='records'), HTTPStatus.OK, mimetype=constants.JSON_MIMETYPE)
 
     return app

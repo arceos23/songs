@@ -14,6 +14,8 @@ INVALID_START_DATA_TYPE_MESSAGE = "Start must be an integer."
 INVALID_LIMIT_DATA_TYPE_MESSAGE = "Limit must be an integer."
 INVALID_RATING_DATA_TYPE_MESSAGE = "Rating must be an integer between 0 and 5."
 INVALID_RATING_RANGE_MESSAGE = "Rating must be between 0 and 5."
+SONG_TITLE_NOT_FOUND_MESSAGE = "Song with the following title not found: "
+SONG_ID_NOT_FOUND_MESSAGE = "Song with the following title not found: "
 
 # Response mimetypes
 JSON_MIMETYPE = "application/json"

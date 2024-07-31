@@ -24,6 +24,10 @@ def runner(app):
     return app.test_cli_runner()
 
 
+def test_app_creation():
+    assert app is not None
+
+
 def test_get_request(client):
     response = client.get(f"{constants.API_VERSION_ONE}/songs")
 
@@ -181,15 +185,24 @@ def test_get_request_with_title_query_parameter(client):
     assert response.json[0]["rating"] == None
 
 
+def test_get_request_with_non_existent_title_query_parameter(client):
+    title = "Title Does Not Exist - scrabble - wfioewnfewfiew"
+    response = client.get(f"{constants.API_VERSION_ONE}/songs", query_string={"title": title})
+
+    assert response.status_code == HTTPStatus.NOT_FOUND
+    assert response.data == f"{constants.SONG_TITLE_NOT_FOUND_MESSAGE + title}".encode()
+
+
 def test_patch_request_update_rating(client):
-    response = client.patch(f"{constants.API_VERSION_ONE}/songs/5vYA1mW9g2Coh1HUFUSmlb", data={"rating": 2})
+    id = "5vYA1mW9g2Coh1HUFUSmlb"
+    response = client.patch(f"{constants.API_VERSION_ONE}/songs/{id}", data={"rating": 2})
 
     assert len(response.json) == 1
     assert response.status_code == HTTPStatus.OK
     assert response.is_json
 
     assert len(response.json[0]) == constants.NUMBER_OF_ATTRIBUTES
-    assert response.json[0]["id"] == "5vYA1mW9g2Coh1HUFUSmlb"
+    assert response.json[0]["id"] == id
     assert response.json[0]["title"] == "3AM"
     assert response.json[0]["danceability"] == 0.521
     assert response.json[0]["energy"] == 0.673
@@ -253,3 +266,11 @@ def test_patch_request_update_rating_above_maximum_rating(client):
     response = client.patch(f"{constants.API_VERSION_ONE}/songs/5vYA1mW9g2Coh1HUFUSmlb", data={"rating": constants.RATING_UPPER_BOUND + 1})
     assert response.status_code == HTTPStatus.BAD_REQUEST
     assert response.data == f"{constants.INVALID_RATING_RANGE_MESSAGE}".encode()
+
+
+def test_patch_request_with_non_existent_id_path_parameter(client):
+    id = "ID_THAT_DOES_NOT_EXIST-scrabble-gjeiwfgn34ejwfewjn"
+    response = client.patch(f"{constants.API_VERSION_ONE}/songs/{id}", data={"rating": 2})
+
+    assert response.status_code == HTTPStatus.NOT_FOUND
+    assert response.data == f"{constants.SONG_ID_NOT_FOUND_MESSAGE + id}".encode()
