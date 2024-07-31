@@ -1,10 +1,19 @@
+# Steps to Run the Program
+
+1. Initialize the database: `flask --app app init-db`
+2. Start the server: `flask --app app run --port 5000`
+
+# Command to Run Unit Tests
+
+1. `python3 -m pytest`
+
 # Additional Considerations for Production-Ready Software
 
 ## Data Ingestion
 
 1. Improve the robustness of using Pandas to normalize the input data. Considerations include ensuring consistency of column attributes, handling missing data, etc.
 2. Explore automating the data ingestion process. Depending on how often the data source updates its song data, a data pipeline can utilize stream or batch processing to obtain new data and update the backend.
-3. Utilize a database to store data persistently, which can improve the user experience by storing song ratings across sessions and establishing a foundation to build upon for other features. Properly using a relational database such as Postgres will also help ensure data consistency through constraints, keys, etc.
+3. Utilize a more robust and performant database to store data persistently, which can improve the user experience by storing song ratings across sessions and establishing a better foundation to build other features. Properly using a production-ready database such as Postgres will provide more features to improve data consistency, performance, storage usage, etc.
 4. Consider getting data from multiple sources to improve the song catalog locally and globally
 
 ## API
