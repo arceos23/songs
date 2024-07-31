@@ -1,9 +1,25 @@
-# Steps to Run the Program
+# Steps to Run the Program in a Virtual Environment
 
-1. Initialize the database: `flask --app app init-db`
-2. Start the server: `flask --app app run --port 5000`
+(Note that one can organize a virtual environment in various ways. Skip to step for commands to run the program.)
 
-# Command to Run Unit Tests
+1. `cd` into the project directory
+2. Make a new folder to hold the virtual environment: `mkdir venv`
+3. Create a virtual environment in the new folder: `python3 -m venv ./venv`
+4. Start the created virtual environment. See the following link for platform- and shell-specific instructions: https://docs.python.org/3/library/venv.html#how-venvs-work
+5. Install the program's dependencies: `pip install -r requirements.txt`
+6. Initialize the database: `flask --app app init-db`
+7. Start the server: `flask --app app run --port 5000`
+
+# Example requests URLs
+
+1. GET http://127.0.0.1:5000/api/v1/songs
+2. GET http://127.0.0.1:5000/api/v1/songs?start=0&limit=1
+3. GET http://127.0.0.1:5000/api/v1/songs?title=3AM
+4. PATCH http://127.0.0.1:5000/api/v1/songs/1 -- request body contains a key of rating and a value between 0 and 5
+
+# Command to Run Unit Tests after setting up a Virtual Environment
+
+(See the previous section on running the program for details on setting up a virtual environment.)
 
 1. `python3 -m pytest`
 
