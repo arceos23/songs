@@ -17,7 +17,7 @@
 3. GET http://127.0.0.1:5000/api/v1/songs?title=3AM
 4. PATCH http://127.0.0.1:5000/api/v1/songs/1 -- request body contains a key of rating and a value between 0 and 5
 
-# Command to Run Unit Tests after setting up a Virtual Environment
+# Command to Run Unit Tests After Setting Up a Virtual Environment
 
 (See the previous section on running the program for details on setting up a virtual environment.)
 
